@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garbage Classification</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input {
+            margin: 15px 0;
+        }
+
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        img {
+            max-width: 300px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .loading {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>♻️ Garbage Classification</h1>
+
+    <p>Upload an image to classify garbage type.</p>
+
+    <input type="file" id="imageInput" accept="image/*">
+
+    <br>
+
+    <button onclick="predictImage()">
+        Predict
+    </button>
+
+    <br>
+
+    <img id="preview" style="display:none;">
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+
+    const API_URL =
+        "https://garbage-classifier-be.onrender.com/predict";
+
+    const imageInput =
+        document.getElementById("imageInput");
+
+    const preview =
+        document.getElementById("preview");
+
+    imageInput.addEventListener(
+        "change",
+        function() {
+
+            const file =
+                imageInput.files[0];
+
+            if (!file) return;
+
+            preview.src =
+                URL.createObjectURL(file);
+
+            preview.style.display =
+                "block";
+        }
+    );
+
+    async function predictImage() {
+
+        const file =
+            imageInput.files[0];
+
+        if (!file) {
+            alert("Please choose an image.");
+            return;
+        }
+
+        const resultDiv =
+            document.getElementById("result");
+
+        resultDiv.innerHTML =
+            "<p class='loading'>Predicting...</p>";
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "file",
+            file
+        );
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL,
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            let probabilitiesHtml = "";
+
+            for (const key in data.probabilities) {
+
+                probabilitiesHtml += `
+                    <tr>
+                        <td>${key}</td>
+                        <td>${data.probabilities[key]}%</td>
+                    </tr>
+                `;
+            }
+
+            resultDiv.innerHTML = `
+                <h2 class="success">
+                    Prediction:
+                    ${data.label}
+                </h2>
+
+                <p>
+                    <strong>Confidence:</strong>
+                    ${data.confidence}%
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Probability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${probabilitiesHtml}
+                    </tbody>
+                </table>
+            `;
+
+        } catch (error) {
+
+            console.error(error);
+
+            resultDiv.innerHTML =
+                "<p style='color:red;'>Failed to connect to API.</p>";
+        }
+    }
+
+</script>
+
+</body>
+</html>
