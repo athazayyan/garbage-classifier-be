@@ -1,0 +1,16 @@
+Pembagian Tugas Proyek Ujian Akhir Semester (Pembelajaran Mesin)
+================================================================
+
+1. Achmad Atha Zayyan:
+   - Melakukan preprocessing dataset (pembagian data, augmentasi).
+   - Membangun dan melatih varian model CNN (termasuk Transfer Learning).
+   - Mencari dan mengeksplorasi model dengan performa terbaik.
+   - Mengevaluasi model berdasarkan metrik akurasi dan F1-Score.
+   - Membuat kerangka web awal (integrasi model ke backend).
+
+2. Muhammad Aidil Fitrah:
+   - Melakukan konversi model dari TensorFlow ke bentuk ONNX.
+   - Menyempurnakan fungsionalitas aplikasi web.
+   - Membuat dan merombak tampilan antarmuka (UI) web agar interaktif.
+   - Membuat slide presentasi (PPT) untuk proyek.
+   - Membuat penjelasan dataset dan model di website dan README.md
