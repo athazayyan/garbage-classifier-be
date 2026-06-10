@@ -116,6 +116,133 @@
             </div>
 
         </div>
+
+        <!-- Section: Dataset Info -->
+        <section class="container mx-auto px-6 py-24 gsap-section">
+            <div class="max-w-4xl mx-auto">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-[#333] text-brand-300 text-sm font-medium mb-6">
+                    01 / Data & Preprocessing
+                </div>
+                <h2 class="font-heading text-4xl md:text-5xl font-bold mb-12 tracking-tight">Garbage Classification Dataset</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-[#0a0a0a] border border-[#222] p-8 rounded-3xl">
+                        <h3 class="text-xl font-bold mb-4 text-white">Distribusi Kelas</h3>
+                        <p class="text-brand-300 mb-6">Total 1.987 gambar dibagi ke dalam 4 kelas dengan proporsi yang dijaga menggunakan <i>stratified split</i>.</p>
+                        <ul class="space-y-4">
+                            <li class="flex justify-between items-center border-b border-[#222] pb-2">
+                                <span class="text-brand-200">Glass</span>
+                                <span class="text-white font-medium">501 <span class="text-brand-400 text-sm ml-2">25.2%</span></span>
+                            </li>
+                            <li class="flex justify-between items-center border-b border-[#222] pb-2">
+                                <span class="text-brand-200">Metal</span>
+                                <span class="text-white font-medium">410 <span class="text-brand-400 text-sm ml-2">20.6%</span></span>
+                            </li>
+                            <li class="flex justify-between items-center border-b border-[#222] pb-2">
+                                <span class="text-brand-200">Paper</span>
+                                <span class="text-white font-medium">594 <span class="text-brand-400 text-sm ml-2">29.9%</span></span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-brand-200">Plastic</span>
+                                <span class="text-white font-medium">482 <span class="text-brand-400 text-sm ml-2">24.3%</span></span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-[#0a0a0a] border border-[#222] p-8 rounded-3xl">
+                        <h3 class="text-xl font-bold mb-4 text-white">Strategi Pelatihan</h3>
+                        <p class="text-brand-300 mb-6">Penanganan <i>class imbalance</i> dan augmentasi data untuk memperkuat ketahanan model.</p>
+                        <div class="space-y-4">
+                            <div class="bg-[#111] p-4 rounded-xl border border-[#222]">
+                                <p class="text-sm text-brand-400 uppercase tracking-wider mb-1">Pembagian Data</p>
+                                <p class="text-white font-medium">80% Train, 10% Val, 10% Test</p>
+                            </div>
+                            <div class="bg-[#111] p-4 rounded-xl border border-[#222]">
+                                <p class="text-sm text-brand-400 uppercase tracking-wider mb-1">Preprocessing</p>
+                                <p class="text-white font-medium">Resize 224x224 px, Normalisasi Float32</p>
+                            </div>
+                            <div class="bg-[#111] p-4 rounded-xl border border-[#222]">
+                                <p class="text-sm text-brand-400 uppercase tracking-wider mb-1">Augmentasi (Opsional)</p>
+                                <p class="text-white font-medium">Rotasi ±15°, Zoom, Flip, Shift, Brightness</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Models -->
+        <section class="container mx-auto px-6 py-24 border-t border-[#111] gsap-section">
+            <div class="max-w-4xl mx-auto">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-[#333] text-brand-300 text-sm font-medium mb-6">
+                    02 / Eksperimen Arsitektur
+                </div>
+                <h2 class="font-heading text-4xl md:text-5xl font-bold mb-8 tracking-tight">Evaluasi 4 Varian Model CNN</h2>
+                <p class="text-brand-300 text-lg mb-12">Dari empat model yang diuji, pendekatan <i>Transfer Learning</i> menunjukkan performa paling unggul untuk dataset berukuran kecil (&lt;2k gambar).</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                    <div class="bg-[#050505] border border-[#222] p-6 rounded-2xl opacity-50 grayscale transition hover:grayscale-0 hover:opacity-100 duration-500">
+                        <h4 class="text-white font-bold mb-2">Basic CNN</h4>
+                        <p class="text-brand-400 text-sm">3 Conv Blocks, tanpa BatchNorm / Augmentasi.</p>
+                        <p class="text-xl font-heading font-bold text-white mt-4">61.3%</p>
+                        <p class="text-xs text-brand-500 uppercase">Test Acc</p>
+                    </div>
+                    <div class="bg-[#050505] border border-[#222] p-6 rounded-2xl opacity-50 grayscale transition hover:grayscale-0 hover:opacity-100 duration-500">
+                        <h4 class="text-white font-bold mb-2">Deep CNN + BN</h4>
+                        <p class="text-brand-400 text-sm">4 Conv Blocks, BatchNorm, 9.86M params.</p>
+                        <p class="text-xl font-heading font-bold text-white mt-4">59.3%</p>
+                        <p class="text-xs text-brand-500 uppercase">Test Acc</p>
+                    </div>
+                    <div class="bg-[#050505] border border-[#222] p-6 rounded-2xl opacity-75 grayscale transition hover:grayscale-0 hover:opacity-100 duration-500">
+                        <h4 class="text-white font-bold mb-2">Deep + BN + Aug</h4>
+                        <p class="text-brand-400 text-sm">Arsitektur sama + Augmentasi penuh.</p>
+                        <p class="text-xl font-heading font-bold text-white mt-4">68.3%</p>
+                        <p class="text-xs text-brand-500 uppercase">Test Acc</p>
+                    </div>
+                    <div class="bg-[#111] border border-brand-500 p-6 rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.05)] relative overflow-hidden transition-transform duration-500 hover:-translate-y-2">
+                        <div class="absolute top-0 right-0 bg-white text-black text-[10px] font-bold px-2 py-1 rounded-bl-lg uppercase tracking-wider">Terbaik</div>
+                        <h4 class="text-white font-bold mb-2">MobileNetV2</h4>
+                        <p class="text-brand-300 text-sm">Transfer Learning (ImageNet), GAP, Dense 128.</p>
+                        <p class="text-2xl font-heading font-bold text-white mt-4">82.91%</p>
+                        <p class="text-xs text-brand-400 uppercase">Test Acc</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section: Tech Stack -->
+        <section class="container mx-auto px-6 py-24 border-t border-[#111] gsap-section">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-[#333] text-brand-300 text-sm font-medium mb-6">
+                    03 / Deployment
+                </div>
+                <h2 class="font-heading text-4xl md:text-5xl font-bold mb-12 tracking-tight">Tech Stack & Infrastruktur</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    <div class="bg-[#0a0a0a] border border-[#222] p-8 rounded-3xl transition duration-300 hover:bg-[#111]">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-black font-bold font-heading text-xl mb-6">O</div>
+                        <h3 class="text-xl font-bold mb-2 text-white">Format Model</h3>
+                        <p class="text-brand-400 text-sm">Dikonversi menggunakan <code>tf2onnx</code>. Jauh lebih ringan (~10MB) tanpa perlu TensorFlow runtime di server.</p>
+                    </div>
+                    <div class="bg-[#0a0a0a] border border-[#222] p-8 rounded-3xl transition duration-300 hover:bg-[#111]">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-black font-bold font-heading text-xl mb-6">A</div>
+                        <h3 class="text-xl font-bold mb-2 text-white">Backend FastAPI</h3>
+                        <p class="text-brand-400 text-sm">Menerima form data gambar, memproses inference dengan ONNX Runtime, dan merespons via API.</p>
+                    </div>
+                    <div class="bg-[#0a0a0a] border border-[#222] p-8 rounded-3xl transition duration-300 hover:bg-[#111]">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-black font-bold font-heading text-xl mb-6">W</div>
+                        <h3 class="text-xl font-bold mb-2 text-white">Frontend & Hosting</h3>
+                        <p class="text-brand-400 text-sm">Antarmuka menggunakan Vanilla JS, Tailwind, dan GSAP. Di-host menggunakan layanan Render.com.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="border-t border-[#111] py-8 text-center gsap-section">
+            <p class="text-brand-400 text-sm">Garbage Classification CNN Project. Ujian Akhir Semester Pembelajaran Mesin.</p>
+        </footer>
     </main>
 
     <!-- GSAP (CDN) -->
@@ -151,6 +278,21 @@
                 stagger: 0.1,
                 ease: "power3.out"
             }, "-=0.4");
+
+            // ScrollTrigger Animations for Info Sections
+            gsap.utils.toArray('.gsap-section').forEach(section => {
+                gsap.from(section, {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 85%", 
+                        toggleActions: "play none none reverse"
+                    },
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power3.out"
+                });
+            });
         });
     </script>
 
