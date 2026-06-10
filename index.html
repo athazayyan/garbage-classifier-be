@@ -70,7 +70,7 @@
     <!-- Preloader -->
     <div id="preloader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050505]">
         <div class="overflow-hidden">
-            <h1 class="font-heading text-4xl md:text-6xl font-bold tracking-tighter text-white">Loading Model...</h1>
+            <h1 class="font-heading text-4xl md:text-6xl font-bold tracking-tighter text-white">Memuat Model...</h1>
         </div>
         <div class="w-48 h-[2px] bg-brand-900 mt-6 overflow-hidden">
             <div id="preloader-bar" class="h-full bg-white w-0"></div>
@@ -79,17 +79,40 @@
 
     <!-- Main Content Wrapper -->
     <main id="main-content" class="min-h-screen opacity-0 invisible">
-        <div class="container mx-auto px-6 py-20 flex flex-col items-center justify-center min-h-screen text-center">
+        <div class="container mx-auto px-6 pt-32 pb-20 flex flex-col items-center min-h-screen text-center">
             
-            <h1 class="font-heading text-4xl md:text-6xl font-bold mb-4 tracking-tight">Garbage Classification</h1>
-            <p class="text-brand-300 max-w-xl mx-auto mb-12">Phase 1 Setup: Tailwind, GSAP, and Fonts are ready. The predictor below is unstyled pending Phase 2.</p>
+            <!-- Hero Section -->
+            <div class="max-w-3xl mx-auto mb-16">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-[#333] text-brand-300 text-sm font-medium mb-6">
+                    Proyek Arsitektur CNN
+                </div>
+                <h1 class="font-heading text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight">
+                    Klasifikasi <br class="hidden md:block" /> Sampah
+                </h1>
+                <p class="text-brand-300 text-lg max-w-2xl mx-auto">
+                    Proyek <i>machine learning</i> berbasis Convolutional Neural Networks (CNN) untuk mengklasifikasikan sampah ke dalam empat kategori: Glass, Metal, Paper, dan Plastic. Unggah gambar untuk menguji model.
+                </p>
+            </div>
 
-            <!-- Raw Predictor Elements (Unstyled for now, IDs kept intact) -->
-            <div>
-                <input type="file" id="imageInput" accept="image/*">
-                <button onclick="predictImage()" class="mt-4 px-4 py-2 bg-brand-800 text-white rounded">Predict</button>
-                <img id="preview" style="display:none; max-width: 300px; margin-top: 20px;">
-                <div id="result" class="mt-6 text-left"></div>
+            <!-- Predictor Card -->
+            <div class="bg-[#0a0a0a] border border-[#222] p-8 md:p-10 rounded-3xl w-full max-w-md shadow-[0_0_50px_rgba(0,0,0,0.5)] text-left relative overflow-hidden">
+                <!-- Decorative background glow -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-white/5 blur-[100px] pointer-events-none"></div>
+
+                <div class="mb-8 relative z-10">
+                    <label class="block text-brand-300 text-sm mb-3">Unggah Gambar</label>
+                    <input type="file" id="imageInput" accept="image/*" class="block w-full text-sm text-brand-400 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-[#1a1a1a] file:text-white hover:file:bg-[#2a2a2a] file:transition-colors file:cursor-pointer cursor-pointer bg-[#050505] border border-[#222] rounded-full">
+                </div>
+
+                <button onclick="predictImage()" class="relative z-10 w-full py-4 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                    Prediksi Sekarang
+                </button>
+
+                <div class="relative w-full flex justify-center z-10">
+                    <img id="preview" style="display:none;" class="w-full max-h-64 object-contain rounded-2xl mt-8 border border-[#222] bg-[#050505] p-2">
+                </div>
+
+                <div id="result" class="mt-8 text-left relative z-10"></div>
             </div>
 
         </div>
@@ -147,12 +170,12 @@
         async function predictImage() {
             const file = imageInput.files[0];
             if (!file) {
-                alert("Please choose an image.");
+                alert("Harap pilih gambar terlebih dahulu.");
                 return;
             }
 
             const resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = "<p style='color: #888;'>Predicting...</p>";
+            resultDiv.innerHTML = "<div class='flex items-center justify-center py-4'><div class='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3'></div><p class='text-brand-300'>Memproses Prediksi...</p></div>";
             const formData = new FormData();
             formData.append("file", file);
 
@@ -166,31 +189,42 @@
                 let probabilitiesHtml = "";
                 for (const key in data.probabilities) {
                     probabilitiesHtml += `
-                        <tr>
-                            <td style="padding: 4px 8px; border: 1px solid #333;">${key}</td>
-                            <td style="padding: 4px 8px; border: 1px solid #333;">${data.probabilities[key]}%</td>
+                        <tr class="border-b border-[#222] last:border-0 hover:bg-[#0a0a0a] transition-colors">
+                            <td class="py-3 px-4 text-brand-200 capitalize">${key}</td>
+                            <td class="py-3 px-4 text-white text-right font-medium">${data.probabilities[key]}%</td>
                         </tr>
                     `;
                 }
 
                 resultDiv.innerHTML = `
-                    <h2 style="color: #fff; margin-bottom: 8px;">Prediction: ${data.label}</h2>
-                    <p style="color: #b0b0b0; margin-bottom: 16px;">Confidence: ${data.confidence}%</p>
-                    <table style="border-collapse: collapse; width: 100%;">
-                        <thead>
-                            <tr>
-                                <th style="padding: 4px 8px; border: 1px solid #333; background: #111; text-align: left;">Class</th>
-                                <th style="padding: 4px 8px; border: 1px solid #333; background: #111; text-align: left;">Probability</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${probabilitiesHtml}
-                        </tbody>
-                    </table>
+                    <div class="p-6 bg-[#111] rounded-2xl border border-[#222] mb-6 shadow-inner">
+                        <p class="text-brand-400 text-sm mb-1 uppercase tracking-wider text-xs">Hasil Prediksi</p>
+                        <h2 class="text-3xl font-heading font-bold text-white capitalize tracking-tight">${data.label}</h2>
+                        <div class="mt-4 flex items-center gap-3">
+                            <div class="h-1.5 w-full bg-[#222] rounded-full overflow-hidden">
+                                <div class="h-full bg-white rounded-full transition-all duration-1000 ease-out" style="width: ${data.confidence}%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-brand-200 whitespace-nowrap">${data.confidence}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-[#050505] rounded-2xl border border-[#222] overflow-hidden">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-brand-400 uppercase bg-[#0a0a0a] border-b border-[#222]">
+                                <tr>
+                                    <th class="py-3 px-4 font-medium">Kelas</th>
+                                    <th class="py-3 px-4 font-medium text-right">Probabilitas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${probabilitiesHtml}
+                            </tbody>
+                        </table>
+                    </div>
                 `;
             } catch (error) {
                 console.error(error);
-                resultDiv.innerHTML = "<p style='color:red;'>Failed to connect to API.</p>";
+                resultDiv.innerHTML = "<p class='text-red-400 bg-red-400/10 p-4 rounded-xl border border-red-400/20 text-sm'>Gagal terhubung ke API. Silakan coba lagi.</p>";
             }
         }
     </script>
