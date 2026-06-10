@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 import numpy as np
 import onnxruntime as ort
@@ -75,11 +76,8 @@ def preprocess_image(contents):
 # ==========================
 
 @app.get("/")
-def home():
-
-    return {
-        "message": "Garbage Classification API is running"
-    }
+async def home():
+    return FileResponse("index.html")
 
 
 @app.get("/classes")
