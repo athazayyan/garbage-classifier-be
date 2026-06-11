@@ -46,8 +46,8 @@ CLASS_NAMES = [
 # Threshold
 # ==========================
 
-CONFIDENCE_THRESHOLD = 0.70
-GAP_THRESHOLD = 0.20
+CONFIDENCE_THRESHOLD = 0.60
+GAP_THRESHOLD = 0.15
 
 # ==========================
 # Image Preprocessing
