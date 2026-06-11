@@ -34,12 +34,20 @@ session = ort.InferenceSession(
 
 INPUT_NAME = session.get_inputs()[0].name
 
+# Sesuaikan dengan class_indices saat training
 CLASS_NAMES = [
     "glass",
     "metal",
     "paper",
     "plastic"
 ]
+
+# ==========================
+# Threshold
+# ==========================
+
+CONFIDENCE_THRESHOLD = 0.70
+GAP_THRESHOLD = 0.20
 
 # ==========================
 # Image Preprocessing
@@ -80,6 +88,13 @@ async def home():
     return FileResponse("index.html")
 
 
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy"
+    }
+
+
 @app.get("/classes")
 def classes():
 
@@ -93,51 +108,112 @@ async def predict(
     file: UploadFile = File(...)
 ):
 
-    contents = await file.read()
+    try:
 
-    image = preprocess_image(
-        contents
-    )
+        contents = await file.read()
 
-    prediction = session.run(
-        None,
-        {
-            INPUT_NAME: image
-        }
-    )
+        image = preprocess_image(
+            contents
+        )
 
-    probabilities = prediction[0][0]
+        prediction = session.run(
+            None,
+            {
+                INPUT_NAME: image
+            }
+        )
 
-    idx = int(
-        np.argmax(probabilities)
-    )
+        probabilities = prediction[0][0]
 
-    label = CLASS_NAMES[idx]
+        idx = int(
+            np.argmax(probabilities)
+        )
 
-    confidence = float(
-        probabilities[idx]
-    )
+        predicted_label = CLASS_NAMES[idx]
 
-    return {
-        "label": label,
-        "confidence": round(
-            confidence * 100,
-            2
-        ),
-        "probabilities": {
-            CLASS_NAMES[i]:
-            round(
-                float(probabilities[i]) * 100,
+        confidence = float(
+            probabilities[idx]
+        )
+
+        # ==========================
+        # GAP Calculation
+        # ==========================
+
+        sorted_probs = np.sort(
+            probabilities
+        )
+
+        top1 = float(
+            sorted_probs[-1]
+        )
+
+        top2 = float(
+            sorted_probs[-2]
+        )
+
+        gap = top1 - top2
+
+        # ==========================
+        # Unknown Detection
+        # ==========================
+
+        final_label = predicted_label
+
+        reason = None
+
+        if confidence < CONFIDENCE_THRESHOLD:
+
+            final_label = "Unknown Object"
+
+            reason = (
+                f"Confidence below "
+                f"{CONFIDENCE_THRESHOLD*100:.0f}%"
+            )
+
+        elif gap < GAP_THRESHOLD:
+
+            final_label = "Unknown Object"
+
+            reason = (
+                f"Prediction ambiguity "
+                f"(gap below "
+                f"{GAP_THRESHOLD*100:.0f}%)"
+            )
+
+        return {
+
+            "label": final_label,
+
+            "predicted_class": predicted_label,
+
+            "confidence": round(
+                confidence * 100,
                 2
-            )
-            for i in range(
-                len(CLASS_NAMES)
-            )
-        }
-    }
+            ),
 
-@app.get("/health")
-def health():
-    return {
-        "status": "healthy"
-    }
+            "gap": round(
+                gap * 100,
+                2
+            ),
+
+            "reason": reason,
+
+            "probabilities": {
+
+                CLASS_NAMES[i]:
+                round(
+                    float(probabilities[i]) * 100,
+                    2
+                )
+
+                for i in range(
+                    len(CLASS_NAMES)
+                )
+            }
+        }
+
+    except Exception as e:
+
+        return {
+            "error": str(e)
+        }
